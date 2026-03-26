@@ -10,6 +10,10 @@ from google.genai.types import Content, Part
 
 # --- 1. SETUP ---
 st.set_page_config(page_title="GitHub Scout", layout="wide")
+# Replace these with your actual Google Cloud Project details
+PROJECT_ID = "your-google-cloud-project-id"
+LOCATION = "us-central1"
+
 
 # Setup MCP Parameters
 # Note: Use 'python' for Windows or 'python3' for Mac/Linux
@@ -25,7 +29,7 @@ if "agent_system" not in st.session_state:
 
     st.session_state.agent = Agent(
         name="GitHubScout",
-        model="gemini-1.5-flash",
+        model="gemini-2.5-flash",
         instruction="You are a GitHub expert. Use 'get_repo_summary' for any repo queries.",
         tools=[mcp_toolset]
     )
