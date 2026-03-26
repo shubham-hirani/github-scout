@@ -61,12 +61,29 @@ if prompt := st.chat_input("Ask about a repo (e.g., google/adk)"):
     with st.chat_message("assistant"):
         with st.spinner("Talking to MCP Server..."):
             async def run_agent():
-                # 1. Ensure session is ready
-                await st.session_state.session_service.create_session(
-                    app_name="github_scout",
-                    user_id="user_1",
-                    session_id="session_1"
+
+                user_id = "user_default"
+                session_id = "session_main"
+
+                # Check if session exists to avoid "already exists" error
+                existing_sessions = await st.session_state.session_service.list_sessions(
+                    app_name="github_scout", user_id=user_id
                 )
+
+                # Create session only if it's missing
+                if not any(s.id == session_id for s in existing_sessions):
+                    await st.session_state.session_service.create_session(
+                        app_name="github_scout",
+                        user_id=user_id,
+                        session_id=session_id
+                    )
+
+                # # 1. Ensure session is ready
+                # await st.session_state.session_service.create_session(
+                #     app_name="github_scout",
+                #     user_id="user_1",
+                #     session_id="session_1"
+                # )
 
                 # 2. Wrap the prompt in the 1.27.5 'Content' structure
                 user_content = Content(
