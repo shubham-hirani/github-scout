@@ -71,19 +71,13 @@ if prompt := st.chat_input("Ask about a repo (e.g., google/adk)"):
                 )
 
                 # Create session only if it's missing
-                if not any(s.id == session_id for s in existing_sessions):
+                if not any(s[1].id == session_id for s in existing_sessions if s[1]):
                     await st.session_state.session_service.create_session(
                         app_name="github_scout",
                         user_id=user_id,
                         session_id=session_id
                     )
 
-                # # 1. Ensure session is ready
-                # await st.session_state.session_service.create_session(
-                #     app_name="github_scout",
-                #     user_id="user_1",
-                #     session_id="session_1"
-                # )
 
                 # 2. Wrap the prompt in the 1.27.5 'Content' structure
                 user_content = Content(
@@ -96,8 +90,8 @@ if prompt := st.chat_input("Ask about a repo (e.g., google/adk)"):
                 response_text = ""
                 async for event in st.session_state.runner.run_async(
                         new_message=user_content,
-                        user_id="user_1",
-                        session_id="session_1"
+                        user_id=user_id,
+                        session_id=session_id
                 ):
                     if event.is_final_response():
                         response_text = event.content.parts[0].text
