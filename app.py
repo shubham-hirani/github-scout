@@ -71,7 +71,7 @@ if prompt := st.chat_input("Ask about a repo (e.g., google/adk)"):
                 )
 
                 # Create session only if it's missing
-                if not any(s[1].id == session_id for s in existing_sessions if s[1]):
+                if not any(s.id == session_id for s in existing_sessions.sessions):
                     await st.session_state.session_service.create_session(
                         app_name="github_scout",
                         user_id=user_id,
